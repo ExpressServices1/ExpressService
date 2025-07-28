@@ -1,0 +1,358 @@
+[
+  {
+    "code": "EXPRESS123",
+    "isMoving": "end",
+    "currentLocation": {
+      "lat": 9.0765,
+      "lng": 7.3986
+    },
+    "route": [
+      {
+        "lat": 6.4416,
+        "lng": 3.4104,
+        "name": "Lagos Port"
+      },
+      {
+        "lat": 6.48,
+        "lng": 3.425,
+        "name": "Lagos Offshore"
+      },
+      {
+        "lat": 6.5244,
+        "lng": 3.3792,
+        "name": "Atlantic Entry"
+      },
+      {
+        "lat": 9.0765,
+        "lng": 7.3986,
+        "name": "Abuja"
+      }
+    ],
+    "_currentSubPosition": 0.9999999999999999,
+    "currentRouteIndex": 3
+  },
+  {
+    "code": "SHIP001",
+    "isMoving": "end",
+    "currentLocation": {
+      "lat": 40.6892,
+      "lng": -74.0445
+    },
+    "route": [
+      {
+        "lat": 50.4501,
+        "lng": 30.5234,
+        "name": "Kyiv, Ukraine (Origin)"
+      },
+      {
+        "lat": 46.4825,
+        "lng": 30.7233,
+        "name": "Odessa Port, Ukraine"
+      },
+      {
+        "lat": 44.1934,
+        "lng": 28.6612,
+        "name": "Constanța, Romania"
+      },
+      {
+        "lat": 41.0082,
+        "lng": 28.9784,
+        "name": "Istanbul, Turkey"
+      },
+      {
+        "lat": 35.3213,
+        "lng": 25.1289,
+        "name": "Crete, Greece"
+      },
+      {
+        "lat": 36.1408,
+        "lng": -5.3536,
+        "name": "Gibraltar Strait"
+      },
+      {
+        "lat": 38.7223,
+        "lng": -9.1393,
+        "name": "Lisbon, Portugal"
+      },
+      {
+        "lat": 40.7128,
+        "lng": -74.006,
+        "name": "New York Harbor, USA"
+      },
+      {
+        "lat": 40.6892,
+        "lng": -74.0445,
+        "name": "Port of New York/New Jersey (Destination)"
+      }
+    ],
+    "currentRouteIndex": 8,
+    "_currentSubPosition": 1
+  },
+  {
+    "code": "SHIP002",
+    "isMoving": "end",
+    "currentLocation": {
+      "lat": 25.775,
+      "lng": -80.187
+    },
+    "route": [
+      {
+        "lat": 50.4501,
+        "lng": 30.5234,
+        "name": "Kyiv, Ukraine (Origin)"
+      },
+      {
+        "lat": 46.4825,
+        "lng": 30.7233,
+        "name": "Odessa Port, Ukraine"
+      },
+      {
+        "lat": 44.1934,
+        "lng": 28.6612,
+        "name": "Constanța, Romania"
+      },
+      {
+        "lat": 41.0082,
+        "lng": 28.9784,
+        "name": "Istanbul, Turkey"
+      },
+      {
+        "lat": 35.3213,
+        "lng": 25.1289,
+        "name": "Crete, Greece"
+      },
+      {
+        "lat": 36.1408,
+        "lng": -5.3536,
+        "name": "Gibraltar Strait"
+      },
+      {
+        "lat": 38.7223,
+        "lng": -9.1393,
+        "name": "Lisbon, Portugal"
+      },
+      {
+        "lat": 25.7617,
+        "lng": -80.1918,
+        "name": "Miami, Florida"
+      },
+      {
+        "lat": 25.775,
+        "lng": -80.187,
+        "name": "Port of Miami, USA (Destination)"
+      }
+    ],
+    "currentRouteIndex": 8,
+    "_currentSubPosition": 0.9999999999999999
+  },
+  {
+    "code": "SHIP003",
+    "isMoving": false,
+    "currentLocation": {
+      "lat": 38.7223,
+      "lng": -9.1393
+    },
+    "route": [
+      {
+        "lat": 50.4501,
+        "lng": 30.5234,
+        "name": "Kyiv, Ukraine (Origin)"
+      },
+      {
+        "lat": 46.4825,
+        "lng": 30.7233,
+        "name": "Odessa Port, Ukraine"
+      },
+      {
+        "lat": 44.1934,
+        "lng": 28.6612,
+        "name": "Constanța, Romania"
+      },
+      {
+        "lat": 41.0082,
+        "lng": 28.9784,
+        "name": "Istanbul, Turkey"
+      },
+      {
+        "lat": 35.3213,
+        "lng": 25.1289,
+        "name": "Crete, Greece"
+      },
+      {
+        "lat": 36.1408,
+        "lng": -5.3536,
+        "name": "Gibraltar Strait"
+      },
+      {
+        "lat": 38.7223,
+        "lng": -9.1393,
+        "name": "Lisbon, Portugal"
+      },
+      {
+        "lat": 25.7617,
+        "lng": -80.1918,
+        "name": "Miami, Florida"
+      },
+      {
+        "lat": 25.775,
+        "lng": -80.187,
+        "name": "Port of Miami, USA (Destination)"
+      },
+      {
+        "lat": 29.7604,
+        "lng": -95.3698,
+        "name": "Houston Port, USA (Destination)"
+      }
+    ],
+    "currentRouteIndex": 5
+  },
+  {
+    "code": "IRAN2USA",
+    "isMoving": false,
+    "currentLocation": {
+      "lat": 25.83979,
+      "lng": 55.59614
+    },
+    "route": [
+      {
+        "lat": 27.184,
+        "lng": 56.2666,
+        "name": "Bandar Abbas, Iran"
+      },
+      {
+        "lat": 25.2637,
+        "lng": 55.3088,
+        "name": "Dubai, UAE"
+      },
+      {
+        "lat": 12.7855,
+        "lng": 45.0187,
+        "name": "Bab-el-Mandeb, Yemen"
+      },
+      {
+        "lat": 0,
+        "lng": 32.5,
+        "name": "Indian Ocean"
+      },
+      {
+        "lat": -34.3568,
+        "lng": 18.474,
+        "name": "Cape Town, South Africa"
+      },
+      {
+        "lat": -23.5505,
+        "lng": -46.6333,
+        "name": "Atlantic Crossing"
+      },
+      {
+        "lat": 14.5994,
+        "lng": -61.074,
+        "name": "Caribbean Sea"
+      },
+      {
+        "lat": 25.7617,
+        "lng": -80.1918,
+        "name": "Miami, USA"
+      },
+      {
+        "lat": 29.7604,
+        "lng": -95.3698,
+        "name": "Houston, USA"
+      },
+      {
+        "lat": 40.7128,
+        "lng": -74.006,
+        "name": "New York, USA"
+      }
+    ],
+    "currentRouteIndex": 0,
+    "_currentSubPosition": 0.7
+  },
+  {
+    "code": "IRAN2USA1",
+    "isMoving": false,
+    "currentLocation": {
+      "lat": 27.184,
+      "lng": 56.2666
+    },
+    "route": [
+      {
+        "lat": 27.184,
+        "lng": 56.2666,
+        "name": "Bandar Abbas, Iran"
+      },
+      {
+        "lat": 25.255,
+        "lng": 55.297,
+        "name": "Offshore Dubai, UAE"
+      },
+      {
+        "lat": 24.5,
+        "lng": 57,
+        "name": "Arabian Sea"
+      },
+      {
+        "lat": 15,
+        "lng": 52,
+        "name": "Gulf of Aden"
+      },
+      {
+        "lat": 12.585,
+        "lng": 43.15,
+        "name": "Bab-el-Mandeb Strait"
+      },
+      {
+        "lat": 11.6,
+        "lng": 40.9,
+        "name": "Red Sea"
+      },
+      {
+        "lat": 30,
+        "lng": 32.5833,
+        "name": "Suez Canal Entrance, Egypt"
+      },
+      {
+        "lat": 31.2653,
+        "lng": 32.3019,
+        "name": "Port Said, Egypt (Mediterranean)"
+      },
+      {
+        "lat": 36,
+        "lng": 15,
+        "name": "Central Mediterranean Sea"
+      },
+      {
+        "lat": 37,
+        "lng": -5,
+        "name": "Strait of Gibraltar"
+      },
+      {
+        "lat": 35,
+        "lng": -15,
+        "name": "Eastern Atlantic Ocean"
+      },
+      {
+        "lat": 30,
+        "lng": -30,
+        "name": "Mid-Atlantic Ocean"
+      },
+      {
+        "lat": 25.7617,
+        "lng": -80.1918,
+        "name": "Port of Miami, USA"
+      },
+      {
+        "lat": 32.0835,
+        "lng": -81.0998,
+        "name": "Port of Savannah, USA"
+      },
+      {
+        "lat": 40.6892,
+        "lng": -74.0445,
+        "name": "Port of New York/New Jersey, USA"
+      }
+    ],
+    "currentRouteIndex": 0,
+    "_currentSubPosition": 0
+  }
+]

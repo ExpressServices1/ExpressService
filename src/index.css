@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.leaflet-container {
+  z-index: 0 !important;
+}
+.leaflet-marker-icon,
+.leaflet-pane,
+.leaflet-overlay-pane,
+.leaflet-shadow-pane {
+  z-index: 1000 !important;
+}
