@@ -22,7 +22,11 @@ const io = new Server(server, {
 
 const DATA_FILE = path.join(__dirname, 'data-file.json');
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://expressease-service.vercel.app',
+  methods: ['GET', 'POST' ],
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api', adminAuthRouter);
 
