@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Truck, Globe, Shield, Clock, ArrowRight, Package, Users, Award, MapPin } from 'lucide-react';
 import PricingPlans from '../components/PricingSection';
+import { pingServer } from "../components/pingServer";
 
 const Home: React.FC = () => {
+
+  // Ping the server when the component mounts
+  useEffect(() => {
+    pingServer();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900">
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-white space-y-8">
@@ -23,19 +30,19 @@ const Home: React.FC = () => {
                   Global shipping solutions that deliver your packages safely, quickly, and affordably to every corner of the world.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <a href="/pricing" className="group bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center">
                   Get Quote Now
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </a> 
+                </a>
                 <a href="/track" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 flex items-center justify-center">
                   Track Package
                   <Package className="ml-2 h-5 w-5" />
                 </a >
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 rounded-3xl blur-3xl"></div>
               <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
@@ -61,7 +68,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/10 to-transparent"></div>
       </section>
 
@@ -76,7 +83,7 @@ const Home: React.FC = () => {
               Experience the future of shipping with our cutting-edge logistics solutions
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
@@ -113,7 +120,7 @@ const Home: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{service.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{service.description}</p>
-                
+
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             ))}
@@ -132,7 +139,7 @@ const Home: React.FC = () => {
               Transparent pricing with no hidden fees.
             </p>
           </div>
-      
+
           <PricingPlans className="py-20 px-6" />
         </div>
       </section>
@@ -145,7 +152,7 @@ const Home: React.FC = () => {
               Trusted by <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-300">Millions</span>
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { icon: <Package className="h-8 w-8" />, number: "50M+", label: "Packages Delivered" },
@@ -174,7 +181,7 @@ const Home: React.FC = () => {
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
             Join millions of customers who trust us with their most important deliveries. Get started today.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/contact" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center">
               Start Shipping Now

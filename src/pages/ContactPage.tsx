@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LucideMail, LucideMapPin, LucidePhone } from 'lucide-react';
+import { pingServer } from "../components/pingServer";
 
 const ContactPage: React.FC = () => {
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Msg, setMsg] = useState('');
+
+  // Ping the server when the component mounts
+  useEffect(() => {
+    pingServer();
+  }, []);
+
+  // State to manage loading state
   const [loading, setLoading] = useState(false);
 
   const handleContact = async () => {
@@ -28,7 +36,7 @@ const ContactPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/api/contact', {
+      const response = await fetch('https://expressservicebackend.onrender.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,10 +67,10 @@ const ContactPage: React.FC = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !loading) {
-        handleContact();
-      }
-    };
+    if (e.key === 'Enter' && !loading) {
+      handleContact();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 ">

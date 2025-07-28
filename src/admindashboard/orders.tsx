@@ -6,7 +6,13 @@ import { Marker, Polyline, MapContainer, TileLayer, useMap } from 'react-leaflet
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const socket = io('http://localhost:4000');
+// const socket = io('http://localhost:4000');
+const socket = io('https://expressservicebackend.onrender.com', {
+  transports: ['websocket'],
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+});
 
 // Fix for Leaflet marker icon path issues in React/Vite
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -35,7 +41,7 @@ type Order = {
 
 const fetchOrders = async () => {
   const token = localStorage.getItem('admin_token');
-  const res = await fetch('http://localhost:4000/orders', {
+  const res = await fetch('https://expressservicebackend.onrender.com/orders', {
     headers: { Authorization: `Bearer ${token}` }
   });
   return res.json();
@@ -43,7 +49,7 @@ const fetchOrders = async () => {
 
 const updateIsMoving = async (code: string, isMoving: boolean) => {
   const token = localStorage.getItem('admin_token');
-  await fetch('http://localhost:4000/orders/update-moving', {
+  await fetch('https://expressservicebackend.onrender.com/orders/update-moving', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
