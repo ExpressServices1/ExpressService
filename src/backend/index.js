@@ -23,7 +23,7 @@ const io = new Server(server, {
 const DATA_FILE = path.join(__dirname, 'data-file.json');
 
 app.use(cors({
-  origin: 'https://expressease-service.vercel.app',
+  origin: 'https://expresseaseservice.xyz',
   methods: ['GET', 'POST' ],
   credentials: true
 }));
