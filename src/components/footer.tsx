@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import {
   Mail,
   MapPin,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
+  // Facebook,
+  // Twitter,
+  // Instagram,
+  // Linkedin,
+  // Youtube,
   Package,
   Globe,
   Shield,
@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Star
 } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   const [Email, setEmail] = useState('');
@@ -110,11 +111,12 @@ const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { icon: <Facebook className="h-5 w-5" />, href: '#', name: 'Facebook' },
-    { icon: <Twitter className="h-5 w-5" />, href: '#', name: 'Twitter' },
-    { icon: <Instagram className="h-5 w-5" />, href: '#', name: 'Instagram' },
-    { icon: <Linkedin className="h-5 w-5" />, href: '#', name: 'LinkedIn' },
-    { icon: <Youtube className="h-5 w-5" />, href: '#', name: 'YouTube' }
+    // { icon: <Facebook className="h-5 w-5" />, href: '#', name: 'Facebook' },
+    { icon: <FaWhatsapp className="h-5 w-5" size={24} color="#25D366" />, href: 'https://wa.me/+14022104201', name: 'Whatsapp' },
+    // { icon: <Twitter className="h-5 w-5" />, href: '#', name: 'Twitter' },
+    // { icon: <Instagram className="h-5 w-5" />, href: '#', name: 'Instagram' },
+    // { icon: <Linkedin className="h-5 w-5" />, href: '#', name: 'LinkedIn' },
+    // { icon: <Youtube className="h-5 w-5" />, href: '#', name: 'YouTube' }
   ];
 
   const features = [

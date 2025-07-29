@@ -17,7 +17,7 @@ type PricingPlansProps = {
 const pricingData: Plan[] = [
   {
     name: 'Express Shipping',
-    price: 'Starting at $700',
+    price: 'Starting at $720',
     icon: Truck, 
     features: ['12 days delivery', 'Basic tracking', 'Up to 10kg', 'Standard support', 'Real-Time Tracking'],
     popular: false,
@@ -25,7 +25,7 @@ const pricingData: Plan[] = [
   },
   {
     name: 'International Shipping',
-    price: 'Starting at $1500',
+    price: 'Starting at $1550',
     icon: Globe,
     features: ['8 days delivery', 'Priority tracking', 'Up to 25kg', 'Priority support', 'Customs Assistance'],
     popular: true,
@@ -33,7 +33,7 @@ const pricingData: Plan[] = [
   },
   {
     name: 'Freight Services',
-    price: 'Starting at $4000',
+    price: 'Starting at $4200',
     icon: Plane,
     features: ['2 days delivery', 'Real-time GPS', 'Up to 50kg', '24/7 dedicated support', 'Bulk Cargo Transport', 'Insurance Available'],
     popular: false,
