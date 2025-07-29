@@ -12,6 +12,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = '7d';
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL;
 
 let otpStore = {}; // { email: { otp, expires } }
 
@@ -91,7 +92,7 @@ router.post('/contact', async (req, res) => {
     // Send email
     await transporter.sendMail({
       from: `"ExpressEase Contact" <${process.env.GMAIL_USER}>`,
-      to: ADMIN_EMAIL,
+      to: SUPPORT_EMAIL,
       subject: `Contact Form Submission from ${name}`,
       html: `<div style="font-family:Arial,sans-serif; color:#333; line-height:1.5; padding:20px;">
           <p style="font-size:18px; font-weight:bold; margin-bottom:10px;">

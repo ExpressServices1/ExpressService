@@ -222,11 +222,11 @@ const Footer: React.FC = () => {
               </div> */}
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-cyan-400" />
-                <span className="text-blue-200">support@expressease.com</span>
+                <span className="text-blue-200">support@expresseaseservice.xyz</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-cyan-400" />
-                <span className="text-blue-200">123 Logistics Ave, New York, NY 10001</span>
+                <span className="text-blue-200">3201 6th St, Columbus, Ne 68601, USA</span>
               </div>
             </div>
           </div>

@@ -150,7 +150,7 @@ const ContactPage: React.FC = () => {
             <LucideMail className="text-indigo-600 mt-1" />
             <div>
               <h3 className="font-semibold text-lg text-indigo-800">Email Support</h3>
-              <p>expresseaseservice@gmail.com</p>
+              <p>support@expresseaseservice.xyz</p>
             </div>
           </div>
 
