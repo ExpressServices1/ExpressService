@@ -26,7 +26,7 @@ const socket = io('https://expressservicebackend.onrender.com', {
 interface LatLng { lat: number; lng: number; }
 
 const MapUpdater: React.FC<{ route: LatLng[]; current: LatLng | null; fullRoute: LatLng[] }> = ({ route, current, fullRoute }) => {
-  console.log(route);
+  //console.log(route);
   const map = useMap();
   const hasFitBounds = useRef(false);
   const prevRoute = useRef<LatLng[]>([]);
@@ -147,7 +147,7 @@ const TrackPage: React.FC = () => {
   // UPDATED useEffect for Socket.IO events with proper marker updates
   useEffect(() => {
     const handleLocationUpdate = (trackingData: any) => {
-      console.log('📍 Received location update:', trackingData);
+      //console.log('📍 Received location update:', trackingData);
 
       if (trackingData && trackingData.currentLocation) {
         // Update state
@@ -160,7 +160,7 @@ const TrackPage: React.FC = () => {
 
         // Update marker position using DriftingMarker's built-in animation
         if (markerRef.current) {
-          console.log('🎯 Updating marker to:', trackingData.currentLocation);
+          //console.log('🎯 Updating marker to:', trackingData.currentLocation);
           // DriftingMarker automatically animates to new position
           markerRef.current.setLatLng([
             trackingData.currentLocation.lat,
@@ -171,13 +171,13 @@ const TrackPage: React.FC = () => {
     };
 
     const handleJourneyComplete = () => {
-      console.log('🏁 Journey completed');
+      //console.log('🏁 Journey completed');
       setIsTracking(false);
       setIsMoving(false);
     };
 
     const handleTrackingError = (error: string) => {
-      console.error('❌ Tracking error:', error);
+      //console.error('❌ Tracking error:', error);
       const errorElement = document.getElementById('errmsg') as HTMLElement;
       if (errorElement) {
         errorElement.textContent = error;

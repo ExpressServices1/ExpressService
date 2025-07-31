@@ -59,7 +59,7 @@ const ContactPage: React.FC = () => {
         errorElement.textContent = `Contacting Us Failed: ${data.error}`;
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      //console.error('Error sending message:', error);
       errorElement.textContent = 'Error sending message. Please try again later.';
     } finally {
       setLoading(false);

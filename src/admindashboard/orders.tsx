@@ -55,7 +55,7 @@ const fetchOrders = async (): Promise<Order[]> => {
     // Ensure we return an array
     return Array.isArray(data) ? data : [];
   } catch (error) {
-    console.error('Error fetching orders:', error);
+    //console.error('Error fetching orders:', error);
     return []; // Return empty array on error
   }
 };
@@ -76,7 +76,7 @@ const updateIsMoving = async (code: string, isMoving: boolean) => {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
   } catch (error) {
-    console.error('Error updating order:', error);
+    //console.error('Error updating order:', error);
   }
 };
 

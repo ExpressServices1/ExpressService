@@ -6,9 +6,9 @@ export const pingServer = async () => {
       cache: "no-cache",
     });
     // Optional: Log if needed
-    console.log("Ping sent to backend");
+    //console.log("Ping sent to backend");
   } catch (error) {
     // Fail silently, no need to alert the user
-    console.warn("Ping failed", error);
+    //console.warn("Ping failed", error);
   }
 };

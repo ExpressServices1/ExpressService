@@ -12,7 +12,6 @@ const io = new Server(server, {
   cors: {
     origin: [
       "https://expresseaseservice.xyz",
-      "https://your-vercel-domain.vercel.app",
       "http://localhost:5173" // for development
     ],
     methods: ["GET", "POST"],
@@ -100,7 +99,6 @@ const initializeDatabase = async () => {
 app.use(cors({
   origin: [
     'https://expresseaseservice.xyz',
-    'https://your-vercel-domain.vercel.app',
     'http://localhost:5173' // for development
   ],
   methods: ['GET', 'POST'],
