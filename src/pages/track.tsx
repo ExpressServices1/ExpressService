@@ -71,7 +71,7 @@ const TrackPage: React.FC = () => {
   // Ping the server when the component mounts
   useEffect(() => {
     pingServer();
-  }, []);
+  }, []); 
 
   const mapContainerRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
@@ -80,7 +80,7 @@ const TrackPage: React.FC = () => {
     const errorElement = document.getElementById('errmsg') as HTMLElement;
     const ls = document.getElementById('ls') as HTMLElement;
     errorElement.textContent = '';
-    ls?.textContent = ''; // Clear previous status message
+    ls.textContent = ''; // Clear previous status message
 
     if (code.trim().toLowerCase() === 'admin') {
       // Check for admin token and expiry
