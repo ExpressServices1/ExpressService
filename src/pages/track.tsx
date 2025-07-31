@@ -65,6 +65,7 @@ const TrackPage: React.FC = () => {
   const [isTracking, setIsTracking] = useState(false);
   const [isMoving, setIsMoving] = useState(true);
   const [mapKey, setMapKey] = useState(0);
+  const [trackingCode, setTrackingCode] = useState(''); // Track current package
 
   // Ping the server when the component mounts
   useEffect(() => {
@@ -121,10 +122,11 @@ const TrackPage: React.FC = () => {
         setRoute(data.traveled || data.route.slice(0, currentIndex + 1));
         setCurrentRouteIndex(currentIndex);
 
-        setIsMoving(data.isMoving !== false);
+        setIsMoving(data.isMoving === 'true' || data.isMoving === true);
         setIsTracking(true);
+        setTrackingCode(code.trim()); // Store the tracking code
         socket.emit('startTracking', code.trim());
-        setMapKey(prev => prev + 1); // Add this line to force remount
+        setMapKey(prev => prev + 1); // Force remount for clean state
       } else {
         errorElement.textContent = 'Ship tracking code not found';
         setFound(false);
@@ -133,6 +135,7 @@ const TrackPage: React.FC = () => {
         setFullRoute([]);
         setCurrentRouteIndex(0);
         setIsMoving(true); // reset
+        setTrackingCode(''); // Clear tracking code
       }
     } catch (error) {
       errorElement.textContent = 'Error connecting to ship tracking service. Please try again.';
@@ -141,16 +144,24 @@ const TrackPage: React.FC = () => {
     }
   };
 
+  // UPDATED useEffect for Socket.IO events with proper marker updates
   useEffect(() => {
     const handleLocationUpdate = (trackingData: any) => {
+      console.log('📍 Received location update:', trackingData);
+
       if (trackingData && trackingData.currentLocation) {
+        // Update state
         setCurrent(trackingData.currentLocation);
         if (trackingData.traveledPath) {
           setRoute(trackingData.traveledPath);
           setCurrentRouteIndex(trackingData.traveledPath.length - 1);
         }
-        setIsMoving(trackingData.isMoving !== false);
+        setIsMoving(trackingData.isMoving === 'true' || trackingData.isMoving === true);
+
+        // Update marker position using DriftingMarker's built-in animation
         if (markerRef.current) {
+          console.log('🎯 Updating marker to:', trackingData.currentLocation);
+          // DriftingMarker automatically animates to new position
           markerRef.current.setLatLng([
             trackingData.currentLocation.lat,
             trackingData.currentLocation.lng
@@ -160,10 +171,13 @@ const TrackPage: React.FC = () => {
     };
 
     const handleJourneyComplete = () => {
+      console.log('🏁 Journey completed');
       setIsTracking(false);
+      setIsMoving(false);
     };
 
     const handleTrackingError = (error: string) => {
+      console.error('❌ Tracking error:', error);
       const errorElement = document.getElementById('errmsg') as HTMLElement;
       if (errorElement) {
         errorElement.textContent = error;
@@ -181,6 +195,15 @@ const TrackPage: React.FC = () => {
       socket.off('trackingError', handleTrackingError);
     };
   }, []);
+
+  // Add cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (trackingCode) {
+        socket.emit('stopTracking', trackingCode);
+      }
+    };
+  }, [trackingCode]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !loading) {
@@ -256,7 +279,7 @@ const TrackPage: React.FC = () => {
       {found && current && (
         <div className="mt-10 max-w-6xl mx-auto px-4 relative z-0">
           <MapContainer
-            key={mapKey} // <-- Add this line
+            key={mapKey}
             ref={mapContainerRef}
             center={[current.lat, current.lng]}
             zoom={13}
@@ -288,9 +311,9 @@ const TrackPage: React.FC = () => {
             <DriftingMarker
               ref={markerRef}
               position={[current.lat, current.lng]}
-              duration={58000}
+              duration={58000} // Match your interval - 58 seconds for smooth animation
               keepAtCenter={false}
-              key="ship-marker"
+              key={`ship-marker-${current.lat}-${current.lng}`} // Force re-render on position change
             />
           </MapContainer>
         </div>

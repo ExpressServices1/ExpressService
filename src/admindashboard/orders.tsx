@@ -32,31 +32,52 @@ const shipIcon = new L.Icon({
 
 type Order = {
   code: string;
-  isMoving: boolean | 'end' | 'final';
+  isMoving: boolean | string; // Can be boolean, 'true', 'false', 'end', 'final'
   current: { lat: number; lng: number };
   route: { lat: number; lng: number; name?: string }[];
   currentRouteIndex: number;
   _currentSubPosition: number;
 };
 
-const fetchOrders = async () => {
-  const token = localStorage.getItem('admin_token');
-  const res = await fetch('https://expressservicebackend.onrender.com/orders', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  return res.json();
+const fetchOrders = async (): Promise<Order[]> => {
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('https://expressservicebackend.onrender.com/orders', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    // Ensure we return an array
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    return []; // Return empty array on error
+  }
 };
 
 const updateIsMoving = async (code: string, isMoving: boolean) => {
-  const token = localStorage.getItem('admin_token');
-  await fetch('https://expressservicebackend.onrender.com/orders/update-moving', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ code, isMoving })
-  });
+  try {
+    const token = localStorage.getItem('admin_token');
+    const res = await fetch('https://expressservicebackend.onrender.com/orders/update-moving', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ code, isMoving })
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+  } catch (error) {
+    console.error('Error updating order:', error);
+  }
 };
 
 // Helper component to fit bounds to the route
@@ -106,8 +127,14 @@ const OrderListPage: React.FC = () => {
 
   const handleToggleMoving = async (order: Order) => {
     if (order.isMoving === 'end' || order.isMoving === 'final') return;
-    await updateIsMoving(order.code, !order.isMoving);
-    fetchOrders().then(setOrders);
+
+    // Fix: Properly determine current state and toggle it
+    const currentlyMoving = order.isMoving === 'true' || order.isMoving === true;
+    await updateIsMoving(order.code, !currentlyMoving);
+
+    // Refresh orders after update
+    const updatedOrders = await fetchOrders();
+    setOrders(updatedOrders);
   };
 
   const getCurrentRouteName = (order: Order) => {
@@ -154,7 +181,9 @@ const OrderListPage: React.FC = () => {
               {orders.map(order => {
                 let isEnd = order.isMoving === 'end' || order.isMoving === 'final' ||
                   (order.currentRouteIndex >= order.route.length - 1);
-                let isMoving = order.isMoving === true;
+
+                // Fix: Properly check if moving (handle both string and boolean)
+                let isMoving = order.isMoving === 'true' || order.isMoving === true;
 
                 return (
                   <tr

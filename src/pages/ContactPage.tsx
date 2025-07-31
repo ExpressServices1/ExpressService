@@ -158,7 +158,7 @@ const ContactPage: React.FC = () => {
             <LucidePhone className="text-indigo-600 mt-1" />
             <div>
               <h3 className="font-semibold text-lg text-indigo-800">Phone</h3>
-              <p>+1 (402) 210-4201</p>
+              <p>+1 (402) 210-4204</p>
             </div>
           </div>
 
