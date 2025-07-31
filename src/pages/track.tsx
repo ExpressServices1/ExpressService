@@ -67,20 +67,20 @@ const TrackPage: React.FC = () => {
   const [isMoving, setIsMoving] = useState(true);
   const [mapKey, setMapKey] = useState(0);
   const [trackingCode, setTrackingCode] = useState(''); // Track current package
+  const [hideStatusMessages, setHideStatusMessages] = useState(false);
 
   // Ping the server when the component mounts
   useEffect(() => {
     pingServer();
-  }, []); 
+  }, []);
 
   const mapContainerRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
 
   const handleTrack = async () => {
     const errorElement = document.getElementById('errmsg') as HTMLElement;
-    const ls = document.getElementById('ls') as HTMLElement;
     errorElement.textContent = '';
-    ls.textContent = ''; // Clear previous status message
+    setHideStatusMessages(true);
 
     if (code.trim().toLowerCase() === 'admin') {
       // Check for admin token and expiry
@@ -120,6 +120,8 @@ const TrackPage: React.FC = () => {
         setFound(true);
         setFullRoute([...data.route]);
         setCurrent(data.current);
+
+        setHideStatusMessages(false);
 
         const currentIndex = data.currentRouteIndex || 0;
         setRoute(data.traveled || data.route.slice(0, currentIndex + 1));
@@ -255,27 +257,30 @@ const TrackPage: React.FC = () => {
           >
             {loading ? 'Tracking...' : 'Track Package'}
           </button>
-          {showLive && (
+          {!hideStatusMessages && showLive && (
             <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg">
-              <p className="text-green-700 font-medium" id="ls">
+              <p className="text-green-700 font-medium">
                 🚢 Live tracking active - Ship updates every 1 minute
               </p>
             </div>
           )}
-          {showPaused && (
+
+          {!hideStatusMessages && showPaused && (
             <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
-              <p className="text-yellow-700 font-medium" id="ls">
+              <p className="text-yellow-700 font-medium">
                 ⏸️ Tracking Paused - Ship is not moving
               </p>
             </div>
           )}
-          {isAtEnd && (
+
+          {!hideStatusMessages && isAtEnd && (
             <div className="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-lg">
-              <p className="text-blue-700 font-medium" id="ls">
+              <p className="text-blue-700 font-medium">
                 🏁 Ship has reached final destination
               </p>
             </div>
           )}
+
         </div>
       </div>
 
