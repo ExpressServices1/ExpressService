@@ -78,7 +78,9 @@ const TrackPage: React.FC = () => {
 
   const handleTrack = async () => {
     const errorElement = document.getElementById('errmsg') as HTMLElement;
+    const ls = document.getElementById('ls') as HTMLElement;
     errorElement.textContent = '';
+    ls?.textContent = ''; // Clear previous status message
 
     if (code.trim().toLowerCase() === 'admin') {
       // Check for admin token and expiry
@@ -255,21 +257,21 @@ const TrackPage: React.FC = () => {
           </button>
           {showLive && (
             <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg">
-              <p className="text-green-700 font-medium">
+              <p className="text-green-700 font-medium" id="ls">
                 🚢 Live tracking active - Ship updates every 1 minute
               </p>
             </div>
           )}
           {showPaused && (
             <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
-              <p className="text-yellow-700 font-medium">
+              <p className="text-yellow-700 font-medium" id="ls">
                 ⏸️ Tracking Paused - Ship is not moving
               </p>
             </div>
           )}
           {isAtEnd && (
             <div className="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-lg">
-              <p className="text-blue-700 font-medium">
+              <p className="text-blue-700 font-medium" id="ls">
                 🏁 Ship has reached final destination
               </p>
             </div>
