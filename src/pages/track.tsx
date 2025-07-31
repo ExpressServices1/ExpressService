@@ -26,7 +26,8 @@ const socket = io('https://expressservicebackend.onrender.com', {
 interface LatLng { lat: number; lng: number; }
 
 const MapUpdater: React.FC<{ route: LatLng[]; current: LatLng | null; fullRoute: LatLng[] }> = ({ route, current, fullRoute }) => {
-  //console.log(route);
+  void route;
+  // console.log(route);
   const map = useMap();
   const hasFitBounds = useRef(false);
   const prevRoute = useRef<LatLng[]>([]);
