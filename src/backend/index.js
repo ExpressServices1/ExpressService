@@ -166,7 +166,8 @@ setInterval(async () => {
       const nextPoint = pkg.route[Math.min(currentRouteIndex + 1, totalPoints - 1)];
       const latDiff = nextPoint.lat - currentPoint.lat;
       const lngDiff = nextPoint.lng - currentPoint.lng;
-      const moveRatio = 0.1;
+      // const moveRatio = 0.1;
+      const moveRatio = 0.0008680555555555555;
 
       let currentSubPosition = pkg.currentSubPosition || 0;
       currentSubPosition += moveRatio;
