@@ -354,5 +354,52 @@
     ],
     "currentRouteIndex": 0,
     "_currentSubPosition": 0
+  },
+  {
+    "code": "israel2canada",
+    "isMoving": false,
+    "currentLocation": {
+      "lat": 32.7940,
+      "lng": 34.9896
+    },
+    "route": [
+      {
+        "lat": 32.7940,
+        "lng": 34.9896,
+        "name": "Port of Haifa, Israel"
+      },
+      {
+        "lat": 36.8065,
+        "lng": 10.1815,
+        "name": "Port of Tunis, Tunisia"
+      },
+      {
+        "lat": 36.1408,
+        "lng": -5.3536,
+        "name": "Strait of Gibraltar, Spain"
+      },
+      {
+        "lat": 31.0000,
+        "lng": -16.0000,
+        "name": "Mid-Atlantic Ocean"
+      },
+      {
+        "lat": 32.2948,
+        "lng": -64.7814,
+        "name": "Bermuda"
+      },
+      {
+        "lat": 44.6488,
+        "lng": -63.5752,
+        "name": "Port of Halifax, Canada"
+      },
+      {
+        "lat": 45.5017,
+        "lng": -73.5673,
+        "name": "Port of Montreal, Canada"
+      }
+    ],
+    "currentRouteIndex": 0,
+    "_currentSubPosition": 0
   }
 ]

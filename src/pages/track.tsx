@@ -133,7 +133,7 @@ const TrackPage: React.FC = () => {
         socket.emit('startTracking', code.trim());
         setMapKey(prev => prev + 1); // Force remount for clean state
       } else {
-        errorElement.textContent = 'Ship tracking code not found';
+        errorElement.textContent = 'Package tracking code not found';
         setFound(false);
         setCurrent(null);
         setRoute([]);
@@ -143,7 +143,7 @@ const TrackPage: React.FC = () => {
         setTrackingCode(''); // Clear tracking code
       }
     } catch (error) {
-      errorElement.textContent = 'Error connecting to ship tracking service. Please try again.';
+      errorElement.textContent = 'Error connecting to package tracking service. Please try again.';
     } finally {
       setLoading(false);
     }
@@ -260,7 +260,7 @@ const TrackPage: React.FC = () => {
           {!hideStatusMessages && showLive && (
             <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg">
               <p className="text-green-700 font-medium">
-                🚢 Live tracking active - Ship updates every 1 minute
+                🚢 Live tracking active - Package updates every 1 minute
               </p>
             </div>
           )}
@@ -268,7 +268,7 @@ const TrackPage: React.FC = () => {
           {!hideStatusMessages && showPaused && (
             <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
               <p className="text-yellow-700 font-medium">
-                ⏸️ Tracking Paused - Ship is not moving
+                ⏸️ Tracking Paused - Package is not moving
               </p>
             </div>
           )}
@@ -276,7 +276,7 @@ const TrackPage: React.FC = () => {
           {!hideStatusMessages && isAtEnd && (
             <div className="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-lg">
               <p className="text-blue-700 font-medium">
-                🏁 Ship has reached final destination
+                🏁 Package has reached final destination
               </p>
             </div>
           )}

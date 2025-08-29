@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -69,6 +68,16 @@ const Package = sequelize.define('Package', {
     allowNull: false,
     defaultValue: 0,
     field: 'current_sub_position'
+  },
+  category: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: 'fadmin'
+  },
+  moveRatio: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    defaultValue: 0.1
   }
 }, {
   tableName: 'packages',
@@ -78,6 +87,7 @@ const Package = sequelize.define('Package', {
   updatedAt: 'updated_at'
 });
 
+
 // Track active socket connections for each package
 const activeTrackingSockets = new Map(); // Map<code, Set<socketId>>
 
@@ -86,7 +96,7 @@ const initializeDatabase = async () => {
   try {
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully.');
-    
+
     // Sync models (use { force: false } for production)
     await sequelize.sync({ alter: false });
     console.log('✅ Database models synchronized.');
@@ -267,6 +277,62 @@ setInterval(async () => {
   }
 }, 60000); // Every 1 minute
 
+// Haversine formula to calculate distance between two lat/lng points (in kilometers)
+function haversineDistance(pointA, pointB) {
+  const toRad = deg => deg * Math.PI / 180;
+  const R = 6371; // Earth radius in km
+  const dLat = toRad(pointB.lat - pointA.lat);
+  const dLng = toRad(pointB.lng - pointA.lng);
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(pointA.lat)) * Math.cos(toRad(pointB.lat)) *
+    Math.sin(dLng / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// Calculate total route distance
+function totalRouteDistance(route) {
+  let total = 0;
+  for (let i = 1; i < route.length; i++) {
+    total += haversineDistance(route[i - 1], route[i]);
+  }
+  return total;
+}
+
+// Distance-aware moveRatio calculation
+function calculateMoveRatio(route, days, intervalMs = 60000) {
+  if (!Array.isArray(route) || route.length < 2 || typeof days !== 'number' || days <= 0) {
+    throw new Error('Invalid route or days');
+  }
+  const totalDistance = totalRouteDistance(route); // in km
+  const ticksPerDay = Math.floor((24 * 60 * 60 * 1000) / intervalMs);
+  const totalTicks = days * ticksPerDay;
+  // moveRatio is now "km per tick"
+  return totalDistance / totalTicks;
+}
+
+// Endpoint to get moveRatio for a specific package code and days
+app.post('/orders/move-ratio', async (req, res) => {
+  const { code, days } = req.body;
+  try {
+    if (!code || typeof days !== 'number' || days <= 0) {
+      return res.status(400).json({ error: 'Code and valid days required' });
+    }
+    const pkg = await Package.findOne({
+      where: { code },
+      attributes: ['id', 'code', 'route']
+    });
+    if (!pkg || !pkg.route || pkg.route.length < 2) {
+      return res.status(404).json({ error: 'Package or route not found' });
+    }
+    const moveRatio = calculateMoveRatio(pkg.route, days);
+    res.json({ id: pkg.id, code: pkg.code, moveRatio });
+  } catch (error) {
+    console.error('Error in /orders/move-ratio:', error);
+    res.status(500).json({ error: 'Failed to calculate move ratio' });
+  }
+});
+
 // --- END BACKGROUND SHIP MOVEMENT ---
 
 app.post('/track', async (req, res) => {
@@ -275,7 +341,7 @@ app.post('/track', async (req, res) => {
     if (!code || typeof code !== 'string' || !code.trim()) {
       return res.json({ found: false });
     }
-    
+
     const trimmedCode = code.trim();
     if (trimmedCode.toLowerCase() === 'admin') {
       return res.json({
@@ -330,18 +396,18 @@ app.post('/track', async (req, res) => {
 app.get('/orders', adminAuthMiddleware, async (req, res) => {
   try {
     console.log('📋 Fetching all orders...');
-    
+
     const packages = await Package.findAll({
       order: [['created_at', 'DESC']],
       raw: false
     });
-    
+
     console.log(`✅ Found ${packages.length} packages`);
-    
+
     // Transform data to match frontend expectations
     const transformedPackages = packages.map(pkg => {
       const packageData = pkg.toJSON();
-      
+
       return {
         code: packageData.code,
         isMoving: packageData.is_moving || packageData.isMoving,
@@ -353,17 +419,17 @@ app.get('/orders', adminAuthMiddleware, async (req, res) => {
         updated_at: packageData.updated_at
       };
     });
-    
+
     console.log('📋 Orders response:', transformedPackages);
     res.json(transformedPackages);
   } catch (error) {
     console.error('❌ Error fetching orders:', error);
     console.error('❌ Error details:', error.message);
     console.error('❌ Error stack:', error.stack);
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: 'Failed to fetch orders',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -383,7 +449,7 @@ app.post('/orders/update-moving', adminAuthMiddleware, async (req, res) => {
     // If at end, do not allow further changes
     if (
       pkg.currentRouteIndex >= pkg.route.length - 1 ||
-      pkg.isMoving === 'end' || 
+      pkg.isMoving === 'end' ||
       pkg.isMoving === 'final'
     ) {
       return res.status(400).json({ error: 'Order already ended' });
@@ -403,7 +469,7 @@ app.post('/orders/update-moving', adminAuthMiddleware, async (req, res) => {
 app.post('/orders/create', adminAuthMiddleware, async (req, res) => {
   try {
     const { code, route, currentLocation } = req.body;
-    
+
     const newPackage = await Package.create({
       code,
       route,
@@ -447,20 +513,20 @@ app.delete('/orders/:code', adminAuthMiddleware, async (req, res) => {
 app.get('/debug/db', async (req, res) => {
   try {
     console.log('🔍 Debug: Testing database query...');
-    
+
     // Test raw query first
     const [results] = await sequelize.query('SELECT * FROM packages LIMIT 5');
     console.log('🔍 Raw query results:', results);
-    
+
     // Test Sequelize query
     const packages = await Package.findAll({ limit: 5 });
     console.log('🔍 Sequelize results:', packages.map(p => p.toJSON()));
-    
+
     res.json({
       raw_query: results,
       sequelize_query: packages.map(p => p.toJSON())
     });
-    
+
   } catch (error) {
     console.error('🔍 Debug error:', error);
     res.status(500).json({ error: error.message });
@@ -471,14 +537,14 @@ app.get('/debug/db', async (req, res) => {
 app.get('/debug/orders', async (req, res) => {
   try {
     console.log('🔍 Debug: Testing orders query...');
-    
+
     const packages = await Package.findAll({ limit: 5 });
     console.log('🔍 Orders debug results:', packages.map(p => p.toJSON()));
-    
+
     res.json({
       orders: packages.map(p => p.toJSON())
     });
-    
+
   } catch (error) {
     console.error('🔍 Orders debug error:', error);
     res.status(500).json({ error: error.message });
@@ -571,7 +637,8 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 4000;
 
 // Initialize database and start server
-initializeDatabase().then(() => {
+initializeDatabase().then(async () => {
+  await fastForwardMovingPackages();
   server.listen(PORT, () => {
     console.log(`🚀 Tracking Server running on port ${PORT}`);
   });
@@ -589,3 +656,69 @@ process.on('SIGTERM', async () => {
   await sequelize.close();
   process.exit(0);
 });
+
+async function fastForwardMovingPackages() {
+  const now = Date.now();
+  const intervalMs = 60000; // 1 minute
+
+  const packages = await Package.findAll({
+    where: { isMoving: 'true' }
+  });
+
+  for (const pkg of packages) {
+    if (!pkg.route || pkg.route.length < 2) continue;
+
+    const lastUpdated = pkg.updatedAt ? new Date(pkg.updatedAt).getTime() : now;
+    const elapsedMs = now - lastUpdated;
+    if (elapsedMs < intervalMs) continue; // Less than 1 tick, skip
+
+    const ticks = Math.floor(elapsedMs / intervalMs);
+    const moveRatio = pkg.moveRatio || 0.0008680555555555555;
+
+    let currentRouteIndex = typeof pkg.currentRouteIndex === 'number'
+      ? pkg.currentRouteIndex
+      : findCurrentRouteIndex(pkg.currentLocation, pkg.route);
+
+    let currentSubPosition = pkg.currentSubPosition || 0;
+    let newLocation = pkg.currentLocation;
+    let newRouteIndex = currentRouteIndex;
+    let newIsMoving = pkg.isMoving;
+
+    for (let i = 0; i < ticks; i++) {
+      const totalPoints = pkg.route.length;
+      const currentPoint = pkg.route[newRouteIndex];
+      const nextPoint = pkg.route[Math.min(newRouteIndex + 1, totalPoints - 1)];
+      const latDiff = nextPoint.lat - currentPoint.lat;
+      const lngDiff = nextPoint.lng - currentPoint.lng;
+
+      currentSubPosition += moveRatio;
+
+      if (currentSubPosition >= 1) {
+        newRouteIndex++;
+        currentSubPosition = 0;
+        if (newRouteIndex < totalPoints) {
+          newLocation = { ...pkg.route[newRouteIndex] };
+        }
+      } else {
+        newLocation = {
+          lat: currentPoint.lat + (latDiff * currentSubPosition),
+          lng: currentPoint.lng + (lngDiff * currentSubPosition)
+        };
+      }
+
+      if (newRouteIndex >= totalPoints - 1) {
+        newIsMoving = "end";
+        break;
+      }
+    }
+
+    await Package.update({
+      currentLocation: newLocation,
+      currentRouteIndex: newRouteIndex,
+      currentSubPosition: currentSubPosition,
+      isMoving: newIsMoving
+    }, {
+      where: { id: pkg.id }
+    });
+  }
+}
