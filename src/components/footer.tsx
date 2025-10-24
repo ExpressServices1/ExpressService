@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://expressservicebackend.onrender.com/api/footer/subscribe', {
+      const response = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/api/footer/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

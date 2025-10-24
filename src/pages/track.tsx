@@ -16,7 +16,7 @@ import {
 import { pingServer } from "../components/pingServer";
 
 // const socket = io('http://localhost:4000');
-const socket = io('https://expressservicebackend.onrender.com', {
+const socket = io('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app', {
   transports: ['websocket'],
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
@@ -102,7 +102,7 @@ const TrackPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('https://expressservicebackend.onrender.com/track', {
+      const res = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: code.trim() }),

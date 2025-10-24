@@ -7,7 +7,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // const socket = io('http://localhost:4000');
-const socket = io('https://expressservicebackend.onrender.com', {
+const socket = io('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app', {
   transports: ['websocket'],
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
@@ -42,7 +42,7 @@ type Order = {
 const fetchOrders = async (): Promise<Order[]> => {
   try {
     const token = localStorage.getItem('admin_token');
-    const res = await fetch('https://expressservicebackend.onrender.com/orders', {
+    const res = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/orders', {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -63,7 +63,7 @@ const fetchOrders = async (): Promise<Order[]> => {
 const updateIsMoving = async (code: string, isMoving: boolean) => {
   try {
     const token = localStorage.getItem('admin_token');
-    const res = await fetch('https://expressservicebackend.onrender.com/orders/update-moving', {
+    const res = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/orders/update-moving', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

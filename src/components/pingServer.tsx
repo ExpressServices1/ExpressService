@@ -1,7 +1,7 @@
 // pingServer.ts
 export const pingServer = async () => {
   try {
-    await fetch("https://expressservicebackend.onrender.com/ping", {
+    await fetch("https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/ping", {
       method: "GET",
       cache: "no-cache",
     });

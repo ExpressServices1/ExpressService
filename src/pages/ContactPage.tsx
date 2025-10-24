@@ -36,7 +36,7 @@ const ContactPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://expressservicebackend.onrender.com/api/contact', {
+      const response = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
