@@ -10,8 +10,7 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "https://expresseaseservice.xyz",
-      "http://localhost:5173" // for development
+      "https://expresseaseservice.xyz"
     ],
     methods: ["GET", "POST"],
     credentials: true
@@ -108,8 +107,7 @@ const initializeDatabase = async () => {
 
 app.use(cors({
   origin: [
-    'https://expresseaseservice.xyz',
-    'http://localhost:5173' // for development
+    'https://expresseaseservice.xyz'
   ],
   methods: ['GET', 'POST'],
   credentials: true
