@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/api/footer/subscribe', {
+      const response = await fetch('https://expressback-kylv.onrender.com/api/footer/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -112,7 +112,7 @@ const Footer: React.FC = () => {
 
   const socialLinks = [
     // { icon: <Facebook className="h-5 w-5" />, href: '#', name: 'Facebook' },
-    { icon: <FaWhatsapp className="h-5 w-5" size={24} color="#25D366" />, href: 'https://wa.me/+14022104204', name: 'Whatsapp' },
+    { icon: <FaWhatsapp className="h-5 w-5" size={24} color="#25D366" />, href: 'https://wa.me/+16474936699', name: 'Whatsapp' },
     // { icon: <Twitter className="h-5 w-5" />, href: '#', name: 'Twitter' },
     // { icon: <Instagram className="h-5 w-5" />, href: '#', name: 'Instagram' },
     // { icon: <Linkedin className="h-5 w-5" />, href: '#', name: 'LinkedIn' },

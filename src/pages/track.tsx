@@ -14,9 +14,10 @@ import {
   LucideClock4,
 } from 'lucide-react';
 import { pingServer } from "../components/pingServer";
+import TestimonialCarousel from '../components/Testimony';
 
 // const socket = io('http://localhost:4000');
-const socket = io('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app', {
+const socket = io('https://expressback-kylv.onrender.com', {
   transports: ['websocket'],
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
@@ -102,7 +103,7 @@ const TrackPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/track', {
+      const res = await fetch('https://expressback-kylv.onrender.com/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: code.trim() }),
@@ -351,6 +352,12 @@ const TrackPage: React.FC = () => {
             Leverage intelligent ETA forecasting based on current traffic,
             weather, and route efficiency.
           </p>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div>
+          <TestimonialCarousel />
         </div>
       </section>
     </main>

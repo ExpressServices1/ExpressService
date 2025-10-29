@@ -15,7 +15,7 @@ const AdminLogin: React.FC = () => {
       return;
     }
     try {
-      const res = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/api/admin/login', {
+      const res = await fetch('https://expressback-kylv.onrender.com/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
@@ -39,7 +39,7 @@ const AdminLogin: React.FC = () => {
       return;
     }
     try {
-      const res = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/api/admin/verify-otp', {
+      const res = await fetch('https://expressback-kylv.onrender.com/api/admin/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ otp })

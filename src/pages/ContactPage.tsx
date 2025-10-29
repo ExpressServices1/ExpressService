@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LucideMail, LucideMapPin, LucidePhone } from 'lucide-react';
 import { pingServer } from "../components/pingServer";
+import TestimonialCarousel from '../components/Testimony';
 
 const ContactPage: React.FC = () => {
   const [Name, setName] = useState('');
@@ -36,7 +37,7 @@ const ContactPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://elated-rubia-expresservices1-7dc50fb7.koyeb.app/api/contact', {
+      const response = await fetch('https://expressback-kylv.onrender.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -158,7 +159,7 @@ const ContactPage: React.FC = () => {
             <LucidePhone className="text-indigo-600 mt-1" />
             <div>
               <h3 className="font-semibold text-lg text-indigo-800">Phone</h3>
-              <p>+1 (402) 210-4204</p>
+              <p>+1 (647) 493-6699</p>
             </div>
           </div>
 
@@ -176,6 +177,12 @@ const ContactPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div>
+          <TestimonialCarousel />
+        </div>
+      </section>
     </div>
   );
 };

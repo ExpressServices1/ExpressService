@@ -10,7 +10,8 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "https://expresseaseservice.xyz"
+      "https://expresseaseservice.xyz",
+      "http://localhost:5173"
     ],
     methods: ["GET", "POST"],
     credentials: true
@@ -632,29 +633,6 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 4000;
-
-// Initialize database and start server
-initializeDatabase().then(async () => {
-  await fastForwardMovingPackages();
-  server.listen(PORT, () => {
-    console.log(`🚀 Tracking Server running on port ${PORT}`);
-  });
-});
-
-// Graceful shutdown
-process.on('SIGINT', async () => {
-  console.log('🛑 Shutting down gracefully...');
-  await sequelize.close();
-  process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-  console.log('🛑 Shutting down gracefully...');
-  await sequelize.close();
-  process.exit(0);
-});
-
 async function fastForwardMovingPackages() {
   const now = Date.now();
   const intervalMs = 60000; // 1 minute
@@ -720,3 +698,27 @@ async function fastForwardMovingPackages() {
     });
   }
 }
+
+const PORT = process.env.PORT || 4000;
+
+// Initialize database and start server
+initializeDatabase().then(async () => {
+  await fastForwardMovingPackages();
+  server.listen(PORT, () => {
+    console.log(`🚀 Tracking Server running on port ${PORT}`);
+  });
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('🛑 Shutting down gracefully...');
+  await sequelize.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('🛑 Shutting down gracefully...');
+  await sequelize.close();
+  process.exit(0);
+});
+

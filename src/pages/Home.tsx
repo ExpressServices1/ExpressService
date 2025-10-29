@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Truck, Globe, Shield, Clock, ArrowRight, Package, Users, Award, MapPin } from 'lucide-react';
 import PricingPlans from '../components/PricingSection';
 import { pingServer } from "../components/pingServer";
+import TestimonialCarousel from "../components/Testimony";
 
 const Home: React.FC = () => {
 
@@ -191,6 +192,12 @@ const Home: React.FC = () => {
               Contact Sales
             </button> */}
           </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div>
+          <TestimonialCarousel />
         </div>
       </section>
     </div>

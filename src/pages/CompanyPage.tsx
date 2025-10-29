@@ -7,7 +7,7 @@ const companySections = [
         name: 'About Us',
         id: 'about',
         content: `We are a logistics and supply chain company committed to delivering excellence. With years of experience in domestic and international shipping, we bridge the gap between businesses and their customers through innovative and reliable services.`,
-        img: "/essLogos.png"
+        img: "/about_img01.png"
     },
     {
         name: 'Our Story',
