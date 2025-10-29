@@ -60,13 +60,11 @@ export default function TestimonialCarousel() {
   const [index, setIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const testimonial = testimonials[index];
 
   const resetTimer = (delay: number) => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+    if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setIndex((prev) => (prev + 1) % testimonials.length);
     }, delay);
@@ -74,7 +72,7 @@ export default function TestimonialCarousel() {
 
   const next = () => {
     setIndex((i) => (i + 1) % testimonials.length);
-    resetTimer(10000); // 10s delay after manual click
+    resetTimer(10000);
   };
 
   const prev = () => {
@@ -82,20 +80,43 @@ export default function TestimonialCarousel() {
     resetTimer(10000);
   };
 
+  // Auto switch timer
   useEffect(() => {
-    resetTimer(3000); // default 3 seconds
+    resetTimer(3000);
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+      };
     };
   }, []);
 
+  // Pause on hover
   useEffect(() => {
-    if (hovered) {
-      if (timerRef.current) clearInterval(timerRef.current);
-    } else {
-      resetTimer(3000);
-    }
+    if (hovered) timerRef.current && clearInterval(timerRef.current);
+    else resetTimer(3000);
   }, [hovered]);
+
+  // Auto-scroll active image into view
+  useEffect(() => {
+  const container = scrollContainerRef.current;
+  if (!container) return;
+
+  const activeImage = container.children[index] as HTMLElement;
+  if (!activeImage) return;
+
+  // Calculate position manually to avoid full-page scroll
+  const containerRect = container.getBoundingClientRect();
+  const imageRect = activeImage.getBoundingClientRect();
+
+  const offset =
+    imageRect.left -
+    containerRect.left -
+    containerRect.width / 2 +
+    imageRect.width / 2;
+
+  container.scrollBy({ left: offset, behavior: "smooth" });
+}, [index]);
+
 
   return (
     <div
@@ -112,39 +133,43 @@ export default function TestimonialCarousel() {
         </h2>
       </div>
 
-      {/* Top Avatar Navigation */}
-      <div className="flex items-center justify-center gap-4 mb-10">
+      {/* Avatar Navigation */}
+      <div className="flex items-center justify-center gap-2 md:gap-4 mb-10">
         <button
           onClick={prev}
-          className="p-2 rounded-full hover:bg-indigo-50 border border-gray-300"
+          className="p-2 rounded-full hover:bg-indigo-50 border border-gray-300 flex-shrink-0"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        <div className="flex gap-4">
+        {/* Avatar list — hidden scrollbar, scrollable if needed */}
+        <div
+          ref={scrollContainerRef}
+          className="flex gap-4 px-2 sm:px-4 max-w-[80vw] md:max-w-none overflow-x-auto scroll-smooth no-scrollbar flex-nowrap justify-start md:justify-center"
+        >
           {testimonials.map((t, i) => (
             <img
               key={i}
               src={t.image}
               alt={t.name}
               onClick={() => setIndex(i)}
-              className={`w-16 h-16 rounded-xl object-cover cursor-pointer transition-all duration-300 ${i === index
+              className={`rounded-xl object-cover cursor-pointer transition-all duration-300 ${i === index
                   ? "ring-2 ring-indigo-600 scale-105"
                   : "opacity-50 hover:opacity-100"
-                }`}
+                } w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0`}
             />
           ))}
         </div>
 
         <button
           onClick={next}
-          className="p-2 rounded-full hover:bg-indigo-50 border border-gray-300"
+          className="p-2 rounded-full hover:bg-indigo-50 border border-gray-300 flex-shrink-0"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Main Testimonial Card */}
+      {/* Testimonial Card */}
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -154,7 +179,6 @@ export default function TestimonialCarousel() {
           transition={{ duration: 0.5 }}
           className="bg-white shadow-md rounded-3xl px-6 py-10 md:px-10 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 max-w-4xl mx-auto"
         >
-          {/* Image with Quote */}
           <div className="relative flex-shrink-0">
             <img
               src={testimonial.image}
@@ -166,17 +190,15 @@ export default function TestimonialCarousel() {
             </div>
           </div>
 
-          {/* Text Content */}
           <div className="text-left flex-1">
             <h3 className="text-xl font-semibold text-gray-900 mb-3">
-              “ {testimonial.title} ”
+              “{testimonial.title}”
             </h3>
             <p className="text-gray-600 mb-6 leading-relaxed">
               {testimonial.text}
             </p>
             <p className="font-bold text-gray-900">{testimonial.name}</p>
 
-            {/* Social Icon */}
             {testimonial.socialmedia && (
               <div className="flex gap-4 mt-3">
                 <testimonial.socialmedia

@@ -108,7 +108,8 @@ const initializeDatabase = async () => {
 
 app.use(cors({
   origin: [
-    'https://expresseaseservice.xyz'
+    "https://expresseaseservice.xyz",
+    "http://localhost:5173"
   ],
   methods: ['GET', 'POST'],
   credentials: true
@@ -634,6 +635,7 @@ io.on('connection', (socket) => {
 });
 
 async function fastForwardMovingPackages() {
+  console.log('⏩ Fast-forwarding moving packages...');
   const now = Date.now();
   const intervalMs = 60000; // 1 minute
 
