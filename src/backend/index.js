@@ -10,8 +10,7 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "https://expresseaseservice.xyz",
-      "http://localhost:5173"
+      "https://expresseaseservice.xyz"
     ],
     methods: ["GET", "POST"],
     credentials: true
@@ -108,8 +107,7 @@ const initializeDatabase = async () => {
 
 app.use(cors({
   origin: [
-    "https://expresseaseservice.xyz",
-    "http://localhost:5173"
+    "https://expresseaseservice.xyz"
   ],
   methods: ['GET', 'POST'],
   credentials: true
@@ -332,6 +330,73 @@ app.post('/orders/move-ratio', async (req, res) => {
     res.status(500).json({ error: 'Failed to calculate move ratio' });
   }
 });
+
+async function fastForwardMovingPackages() {
+  console.log('⏩ Fast-forwarding moving packages...');
+  const now = Date.now();
+  const intervalMs = 60000; // 1 minute
+
+  const packages = await Package.findAll({
+    where: { isMoving: 'true' }
+  });
+
+  for (const pkg of packages) {
+    if (!pkg.route || pkg.route.length < 2) continue;
+
+    const lastUpdated = pkg.updatedAt ? new Date(pkg.updatedAt).getTime() : now;
+    const elapsedMs = now - lastUpdated;
+    if (elapsedMs < intervalMs) continue; // Less than 1 tick, skip
+
+    const ticks = Math.floor(elapsedMs / intervalMs);
+    const moveRatio = pkg.moveRatio || 0.0008680555555555555;
+
+    let currentRouteIndex = typeof pkg.currentRouteIndex === 'number'
+      ? pkg.currentRouteIndex
+      : findCurrentRouteIndex(pkg.currentLocation, pkg.route);
+
+    let currentSubPosition = pkg.currentSubPosition || 0;
+    let newLocation = pkg.currentLocation;
+    let newRouteIndex = currentRouteIndex;
+    let newIsMoving = pkg.isMoving;
+
+    for (let i = 0; i < ticks; i++) {
+      const totalPoints = pkg.route.length;
+      const currentPoint = pkg.route[newRouteIndex];
+      const nextPoint = pkg.route[Math.min(newRouteIndex + 1, totalPoints - 1)];
+      const latDiff = nextPoint.lat - currentPoint.lat;
+      const lngDiff = nextPoint.lng - currentPoint.lng;
+
+      currentSubPosition += moveRatio;
+
+      if (currentSubPosition >= 1) {
+        newRouteIndex++;
+        currentSubPosition = 0;
+        if (newRouteIndex < totalPoints) {
+          newLocation = { ...pkg.route[newRouteIndex] };
+        }
+      } else {
+        newLocation = {
+          lat: currentPoint.lat + (latDiff * currentSubPosition),
+          lng: currentPoint.lng + (lngDiff * currentSubPosition)
+        };
+      }
+
+      if (newRouteIndex >= totalPoints - 1) {
+        newIsMoving = "end";
+        break;
+      }
+    }
+
+    await Package.update({
+      currentLocation: newLocation,
+      currentRouteIndex: newRouteIndex,
+      currentSubPosition: currentSubPosition,
+      isMoving: newIsMoving
+    }, {
+      where: { id: pkg.id }
+    });
+  }
+}
 
 // --- END BACKGROUND SHIP MOVEMENT ---
 
@@ -634,72 +699,6 @@ io.on('connection', (socket) => {
   });
 });
 
-async function fastForwardMovingPackages() {
-  console.log('⏩ Fast-forwarding moving packages...');
-  const now = Date.now();
-  const intervalMs = 60000; // 1 minute
-
-  const packages = await Package.findAll({
-    where: { isMoving: 'true' }
-  });
-
-  for (const pkg of packages) {
-    if (!pkg.route || pkg.route.length < 2) continue;
-
-    const lastUpdated = pkg.updatedAt ? new Date(pkg.updatedAt).getTime() : now;
-    const elapsedMs = now - lastUpdated;
-    if (elapsedMs < intervalMs) continue; // Less than 1 tick, skip
-
-    const ticks = Math.floor(elapsedMs / intervalMs);
-    const moveRatio = pkg.moveRatio || 0.0008680555555555555;
-
-    let currentRouteIndex = typeof pkg.currentRouteIndex === 'number'
-      ? pkg.currentRouteIndex
-      : findCurrentRouteIndex(pkg.currentLocation, pkg.route);
-
-    let currentSubPosition = pkg.currentSubPosition || 0;
-    let newLocation = pkg.currentLocation;
-    let newRouteIndex = currentRouteIndex;
-    let newIsMoving = pkg.isMoving;
-
-    for (let i = 0; i < ticks; i++) {
-      const totalPoints = pkg.route.length;
-      const currentPoint = pkg.route[newRouteIndex];
-      const nextPoint = pkg.route[Math.min(newRouteIndex + 1, totalPoints - 1)];
-      const latDiff = nextPoint.lat - currentPoint.lat;
-      const lngDiff = nextPoint.lng - currentPoint.lng;
-
-      currentSubPosition += moveRatio;
-
-      if (currentSubPosition >= 1) {
-        newRouteIndex++;
-        currentSubPosition = 0;
-        if (newRouteIndex < totalPoints) {
-          newLocation = { ...pkg.route[newRouteIndex] };
-        }
-      } else {
-        newLocation = {
-          lat: currentPoint.lat + (latDiff * currentSubPosition),
-          lng: currentPoint.lng + (lngDiff * currentSubPosition)
-        };
-      }
-
-      if (newRouteIndex >= totalPoints - 1) {
-        newIsMoving = "end";
-        break;
-      }
-    }
-
-    await Package.update({
-      currentLocation: newLocation,
-      currentRouteIndex: newRouteIndex,
-      currentSubPosition: currentSubPosition,
-      isMoving: newIsMoving
-    }, {
-      where: { id: pkg.id }
-    });
-  }
-}
 
 const PORT = process.env.PORT || 4000;
 

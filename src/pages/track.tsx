@@ -261,7 +261,7 @@ const TrackPage: React.FC = () => {
           {!hideStatusMessages && showLive && (
             <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg">
               <p className="text-green-700 font-medium">
-                🚢 Live tracking active - Package updates every 1 minute
+                 Live tracking - Package updates every 1 minute
               </p>
             </div>
           )}

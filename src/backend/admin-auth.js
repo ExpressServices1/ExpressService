@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+import { google } from "googleapis";
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
@@ -8,24 +8,62 @@ dotenv.config();
 
 const router = express.Router();
 
+
+// load credentials from .env 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = '7d';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL;
+const { CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, REDIRECT_URI, GMAIL_SEND } = process.env;
+
+// --- Create Gmail API client ---
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
+);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+// --- Helper: Send email using Gmail API ---
+async function sendGmailAPI({ from, to, subject, text, html }) {
+  try {
+    const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
+
+    const messageParts = [
+      `From: ${from}`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      'MIME-Version: 1.0',
+      'Content-Type: text/html; charset=UTF-8',
+      '',
+      html || text,
+    ];
+
+    const message = messageParts.join('\n');
+
+    // Encode to base64url
+    const encodedMessage = Buffer.from(message)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+
+    // Send email
+    const response = await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: { raw: encodedMessage },
+    });
+
+    console.log('Gmail API send success:', response.data.id);
+    return response.data;
+  } catch (err) {
+    console.error('Gmail API send failed:', err);
+    throw err;
+  }
+}
 
 let otpStore = {}; // { email: { otp, expires } }
-
-
-// Configure nodemailer (example with Gmail, use your SMTP settings)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
-  }
-});
-
 // Step 1: Password check and send OTP
 router.post('/admin/login', async (req, res) => {
   const { password } = req.body;
@@ -40,13 +78,13 @@ router.post('/admin/login', async (req, res) => {
 
   try {
     // Send OTP email
-    await transporter.sendMail({
-      from: `"ExpressEase Admin" <${process.env.GMAIL_USER}>`,
+    await sendGmailAPI({
+      from: `"ExpressEase Admin" <${GMAIL_SEND}>`,
       to: ADMIN_EMAIL,
       subject: 'Your Admin OTP',
       text: `Your OTP is: ${otp}`
     });
-    res.json({ message: 'OTP sent to admin email' });
+    res.status(200).json({ message: 'OTP sent to admin email' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to send OTP email' });
   }
@@ -90,8 +128,8 @@ router.post('/contact', async (req, res) => {
 
   try {
     // Send email
-    await transporter.sendMail({
-      from: `"ExpressEase Contact" <${process.env.GMAIL_USER}>`,
+    await sendGmailAPI({
+      from: `"ExpressEase Contact" <${GMAIL_SEND}>`,
       to: SUPPORT_EMAIL,
       subject: `Contact Form Submission from ${name}`,
       html: `<div style="font-family:Arial,sans-serif; color:#333; line-height:1.5; padding:20px;">
@@ -113,7 +151,7 @@ router.post('/contact', async (req, res) => {
           <p style="margin-top:20px;">ExpressEase Team</p>
   </div>`
     });
-    res.json({ message: 'Message sent successfully' });
+    res.status(200).json({ message: 'Message sent successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to send message' });
   }
@@ -128,16 +166,16 @@ router.post('/footer/subscribe', async (req, res) => {
   }
 
   try {
-    // Send OTP email
-    await transporter.sendMail({
-      from: `"ExpressEase Mail" <${process.env.GMAIL_USER}>`,
+    // Send email
+    await sendGmailAPI({
+    from: `"ExpressEase Subscribe" <${GMAIL_SEND}>`,
       to: ADMIN_EMAIL,
       subject: 'User Subscribe to receive updates',
       text: `User with email ${email} has subscribed to receive updates.`
     });
-    res.json({ message: 'Subscribed' });
+    res.status(200).json({ message: 'Subscribed' });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to send subscribed' });
+    res.status(500).json({ error: 'Failed to send subscription email' });
   }
 });
 
