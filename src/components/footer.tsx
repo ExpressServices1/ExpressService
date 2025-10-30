@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
 
   // submit mail function can be added here if needed
   const handleSubscribe = async () => {
-    const errorElement = document.getElementById('errmsg') as HTMLElement;
+    const errorElement = document.getElementById('errfomsg') as HTMLElement;
     errorElement.textContent = '';
     const email = Email.trim();
 
@@ -154,7 +154,7 @@ const Footer: React.FC = () => {
                   onKeyPress={handleKeyPress}
                   disabled={loading}
                 />
-                <p className="text-lg text-red-600 mt-2 text-left" id="errmsg"></p>
+                <p className="text-lg text-red-600 mt-2 text-left" id="errfomsg"></p>
               </div>
               <button className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-6 py-2 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center"
                 onClick={handleSubscribe}
